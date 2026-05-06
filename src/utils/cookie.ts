@@ -17,7 +17,7 @@ export function setCookie(
 ) {
   props = {
     path: '/',
-    ...props
+    ...props,
   };
 
   let exp = props.expires;

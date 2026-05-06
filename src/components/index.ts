@@ -12,3 +12,4 @@ export * from './order-info';
 export * from './order-status';
 export * from './orders-list';
 export * from './profile-menu';
+export { FeedInfoUI } from './ui/feed-info/feed-info';

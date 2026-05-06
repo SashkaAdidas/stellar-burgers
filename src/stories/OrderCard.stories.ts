@@ -8,8 +8,8 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     // More on how to position stories at: https://storybook.js.org/docs/configure/story-layout
-    layout: 'fullscreen'
-  }
+    layout: 'fullscreen',
+  },
 } satisfies Meta<typeof OrderCardUI>;
 
 export default meta;
@@ -30,8 +30,8 @@ export const DefaultOrderCard: Story = {
           price: 123,
           image: '',
           image_large: '',
-          image_mobile: ''
-        }
+          image_mobile: '',
+        },
       ],
       ingredientsToShow: [
         {
@@ -45,7 +45,7 @@ export const DefaultOrderCard: Story = {
           price: 123,
           image: '',
           image_large: '',
-          image_mobile: ''
+          image_mobile: '',
         },
         {
           _id: '111',
@@ -58,8 +58,8 @@ export const DefaultOrderCard: Story = {
           price: 123,
           image: '',
           image_large: '',
-          image_mobile: ''
-        }
+          image_mobile: '',
+        },
       ],
       remains: 2,
       total: 2,
@@ -70,7 +70,7 @@ export const DefaultOrderCard: Story = {
       createdAt: '',
       updatedAt: '',
       number: 3,
-      ingredients: ['Булка', 'Начинка']
+      ingredients: ['Булка', 'Начинка'],
     },
     maxIngredients: 5,
     locationState: {
@@ -79,8 +79,8 @@ export const DefaultOrderCard: Story = {
         key: 'eitkep27',
         pathname: '/',
         search: '',
-        state: null
-      }
-    }
-  }
+        state: null,
+      },
+    },
+  },
 };

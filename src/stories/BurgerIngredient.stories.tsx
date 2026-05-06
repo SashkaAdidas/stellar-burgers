@@ -9,15 +9,15 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     // More on how to position stories at: https://storybook.js.org/docs/configure/story-layout
-    layout: 'fullscreen'
+    layout: 'fullscreen',
   },
   decorators: [
     (Story) => (
       <div style={{ width: 'fit-content', margin: 20 }}>
         <Story />
       </div>
-    )
-  ]
+    ),
+  ],
 } satisfies Meta<typeof BurgerIngredientUI>;
 
 export default meta;
@@ -36,7 +36,7 @@ export const DefaultIngredient: Story = {
       price: 123,
       image: '',
       image_large: '',
-      image_mobile: ''
+      image_mobile: '',
     },
     count: 2,
     locationState: {
@@ -45,9 +45,9 @@ export const DefaultIngredient: Story = {
         key: 'eitkep27',
         pathname: '/',
         search: '',
-        state: null
-      }
+        state: null,
+      },
     },
-    handleAdd: () => {}
-  }
+    handleAdd: () => {},
+  },
 };

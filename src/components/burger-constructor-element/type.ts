@@ -4,4 +4,7 @@ export type BurgerConstructorElementProps = {
   ingredient: TConstructorIngredient;
   index: number;
   totalItems: number;
+  handleClose: () => void;
+  handleMoveUp: () => void;
+  handleMoveDown: () => void;
 };

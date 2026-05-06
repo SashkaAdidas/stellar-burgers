@@ -9,7 +9,7 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     // More on how to position stories at: https://storybook.js.org/docs/configure/story-layout
-    layout: 'fullscreen'
+    layout: 'fullscreen',
   },
   decorators: [
     (Story) => (
@@ -19,13 +19,13 @@ const meta = {
           margin: 20,
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'center'
+          alignItems: 'center',
         }}
       >
         <Story />
       </div>
-    )
-  ]
+    ),
+  ],
 } satisfies Meta<typeof OrderDetailsUI>;
 
 export default meta;
@@ -33,6 +33,6 @@ type Story = StoryObj<typeof meta>;
 
 export const DefaultOrderDetails: Story = {
   args: {
-    orderNumber: 12
-  }
+    orderNumber: 12,
+  },
 };

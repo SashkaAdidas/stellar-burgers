@@ -1,7 +1,7 @@
 import React, { FC, memo } from 'react';
 import {
   CurrencyIcon,
-  FormattedDate
+  FormattedDate,
 } from '@zlden/react-developer-burger-ui-components';
 
 import styles from './order-info.module.css';
@@ -28,7 +28,7 @@ export const OrderInfoUI: FC<OrderInfoUIProps> = memo(({ orderInfo }) => (
               />
             </div>
           </div>
-          <span className='text text_type_main-default pl-4'>{item.name}</span>
+          <span className="text text_type_main-default pl-4">{item.name}</span>
           <span
             className={`text text_type_digits-default pl-4 pr-4 ${styles.quantity}`}
           >
@@ -39,7 +39,7 @@ export const OrderInfoUI: FC<OrderInfoUIProps> = memo(({ orderInfo }) => (
       ))}
     </ul>
     <div className={styles.bottom}>
-      <p className='text text_type_main-default text_color_inactive'>
+      <p className="text text_type_main-default text_color_inactive">
         <FormattedDate date={orderInfo.date} />
       </p>
       <span className={`text text_type_digits-default pr-4 ${styles.total}`}>

@@ -8,13 +8,13 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     // More on how to position stories at: https://storybook.js.org/docs/configure/story-layout
-    layout: 'fullscreen'
-  }
+    layout: 'fullscreen',
+  },
 } satisfies Meta<typeof Preloader>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const DefaultPreloader: Story = {
-  args: {}
+  args: {},
 };

@@ -7,7 +7,7 @@ const config: StorybookConfig = {
     '@storybook/addon-links',
     '@storybook/addon-essentials',
     '@storybook/addon-onboarding',
-    '@storybook/addon-interactions'
+    '@storybook/addon-interactions',
   ],
   webpackFinal: async (config) => {
     config.resolve
@@ -20,7 +20,7 @@ const config: StorybookConfig = {
           '@utils-types': path.resolve(__dirname, '../src/utils/types'),
           '@api': path.resolve(__dirname, '../src/utils/burger-api.ts'),
           '@slices': path.resolve(__dirname, '../src/services/slices'),
-          '@selectors': path.resolve(__dirname, '../src/services/selectors')
+          '@selectors': path.resolve(__dirname, '../src/services/selectors'),
         })
       : null;
     return config;
@@ -29,12 +29,12 @@ const config: StorybookConfig = {
     name: '@storybook/react-webpack5',
     options: {
       builder: {
-        useSWC: true
-      }
-    }
+        useSWC: true,
+      },
+    },
   },
   docs: {
-    autodocs: 'tag'
-  }
+    autodocs: 'tag',
+  },
 };
 export default config;

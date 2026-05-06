@@ -1,22 +1,33 @@
-import { FC } from 'react';
+import { FC, useMemo } from 'react';
+import { useSelector } from 'react-redux';
 
-import { TOrder } from '@utils-types';
+import { TOrder, TOrdersData } from '@utils-types';
 import { FeedInfoUI } from '../ui/feed-info';
-
-const getOrders = (orders: TOrder[], status: string): number[] =>
-  orders
-    .filter((item) => item.status === status)
-    .map((item) => item.number)
-    .slice(0, 20);
+import { RootState } from '../../services/store';
 
 export const FeedInfo: FC = () => {
   /** TODO: взять переменные из стора */
-  const orders: TOrder[] = [];
-  const feed = {};
+  const feed = useSelector((state: RootState) => ({
+    orders: state.feed.orders || [],
+    total: state.feed.total,
+    totalToday: state.feed.totalToday,
+  }));
 
-  const readyOrders = getOrders(orders, 'done');
+  // Фильтрация и сортировка заказов по статусам
+  const getOrdersByStatus = (status: 'done' | 'pending'): number[] =>
+    feed.orders
+      .filter((order) => order.status === status)
+      .sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      )
+      .map((order) => order.number);
 
-  const pendingOrders = getOrders(orders, 'pending');
+  const readyOrders = useMemo(() => getOrdersByStatus('done'), [feed.orders]);
+  const pendingOrders = useMemo(
+    () => getOrdersByStatus('pending'),
+    [feed.orders]
+  );
 
   return (
     <FeedInfoUI

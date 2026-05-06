@@ -10,10 +10,12 @@ import { ProfileMenu } from '@components';
 export const ProfileUI: FC<ProfileUIProps> = ({
   formValue,
   isFormChanged,
-  updateUserError,
   handleSubmit,
   handleCancel,
-  handleInputChange
+  handleInputChange,
+  handleLogout,
+  successMessage,
+  errorMessage,
 }) => (
   <main className={`${commonStyles.container}`}>
     <div className={`mt-30 mr-15 ${styles.menu}`}>
@@ -24,7 +26,7 @@ export const ProfileUI: FC<ProfileUIProps> = ({
       onSubmit={handleSubmit}
     >
       <>
-        <div className='pb-6'>
+        <div className="pb-6">
           <Input
             type={'text'}
             placeholder={'Имя'}
@@ -37,7 +39,7 @@ export const ProfileUI: FC<ProfileUIProps> = ({
             icon={'EditIcon'}
           />
         </div>
-        <div className='pb-6'>
+        <div className="pb-6">
           <Input
             type={'email'}
             placeholder={'E-mail'}
@@ -50,7 +52,7 @@ export const ProfileUI: FC<ProfileUIProps> = ({
             icon={'EditIcon'}
           />
         </div>
-        <div className='pb-6'>
+        <div className="pb-6">
           <Input
             type={'password'}
             placeholder={'Пароль'}
@@ -66,25 +68,42 @@ export const ProfileUI: FC<ProfileUIProps> = ({
         {isFormChanged && (
           <div className={styles.button}>
             <Button
-              type='secondary'
-              htmlType='button'
-              size='medium'
+              type="secondary"
+              htmlType="button"
+              size="medium"
               onClick={handleCancel}
             >
               Отменить
             </Button>
-            <Button type='primary' size='medium' htmlType='submit'>
+            <Button type="primary" size="medium" htmlType="submit">
               Сохранить
             </Button>
           </div>
         )}
-        {updateUserError && (
+        {errorMessage && (
           <p
             className={`${commonStyles.error} pt-5 text text_type_main-default`}
           >
-            {updateUserError}
+            {errorMessage}
           </p>
         )}
+        {successMessage && (
+          <p
+            className={`${commonStyles.success} pt-5 text text_type_main-default`}
+          >
+            {successMessage}
+          </p>
+        )}
+        <div className="pt-5">
+          <Button
+            type="secondary"
+            htmlType="button"
+            size="medium"
+            onClick={handleLogout}
+          >
+            Выход из аккаунта
+          </Button>
+        </div>
       </>
     </form>
   </main>
