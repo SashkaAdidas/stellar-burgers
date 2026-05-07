@@ -89,12 +89,10 @@ export const constructorSlice = createSlice({
         const orderData = action.payload;
 
         // Формируем массив идентификаторов ингредиентов
-        // Булка должна учитываться дважды - сверху и снизу
         const ingredientsIds = [
           ...state.constructorItems.ingredients.map((item) => item._id),
         ].filter((id): id is string => Boolean(id));
 
-        // Если есть булка, добавляем ее ID дважды (сверху и снизу)
         if (state.constructorItems.bun) {
           ingredientsIds.unshift(state.constructorItems.bun._id);
           ingredientsIds.push(state.constructorItems.bun._id);

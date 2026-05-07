@@ -44,7 +44,7 @@ export const feedSlice = createSlice({
         status: order.number % 2 === 0 ? 'done' : 'pending',
       }));
 
-      // Сортируем по дате: новые — сверху
+      // Сортируем по дате
       const sortedOrders = [...mockOrders].sort(
         (a, b) =>
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
@@ -98,6 +98,5 @@ export const startFeedConnection = (accessToken: string) => (dispatch: any) => {
   // Для публичной ленты заказов не используем токен
   ws.connect('');
 
-  // Возвращаем экземпляр WebSocket
   return ws;
 };

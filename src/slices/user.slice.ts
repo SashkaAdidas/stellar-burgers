@@ -7,7 +7,7 @@ import {
   logoutApi,
   loginUserApi,
 } from '../utils/burger-api';
-import { setCookie } from '../utils/cookie'; // Для сохранения токена
+import { setCookie } from '../utils/cookie';
 
 // Типы
 type TRegisterData = {
@@ -20,8 +20,6 @@ type TLoginData = {
   email: string;
   password: string;
 };
-
-// Асинхронные экшены
 
 // Вход пользователя
 export const loginUser = createAsyncThunk(

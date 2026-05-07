@@ -1,12 +1,7 @@
 import { ProfileUI } from '@ui-pages';
 import { FC, SyntheticEvent, useEffect } from 'react';
 import { useDispatch, useSelector } from '../../services/store';
-import {
-  fetchUser,
-  updateUser,
-  logoutUser,
-  forceAuthCheck,
-} from '../../slices/user.slice';
+import { fetchUser, updateUser, logoutUser } from '../../slices/user.slice';
 import { TUser } from '@utils-types';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -54,7 +49,7 @@ export const Profile: FC = () => {
       userData.email = formValue.email;
     }
 
-    // Добавляем пароль, если он введён
+    // Добавляем пароль
     if (formValue.password) {
       userData.password = formValue.password;
     }
