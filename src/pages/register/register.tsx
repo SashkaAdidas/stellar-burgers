@@ -1,8 +1,13 @@
 import { FC, SyntheticEvent, useState } from 'react';
-import { useDispatch } from '../../services/store'; // Путь к store
-import { registerUser } from '../../slices/user.slice'; // Импортируем экшен
-import { useNavigate } from 'react-router-dom'; // Для перехода после регистрации
+import { useDispatch } from '../../services/store';
+import { registerUser } from '../../slices/user.slice';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { RegisterUI } from '@ui-pages';
+
+// Тип для location state
+type LocationState = {
+  from?: string;
+};
 
 export const Register: FC = () => {
   const [userName, setUserName] = useState('');
@@ -12,6 +17,9 @@ export const Register: FC = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+  const locationState = location.state as LocationState;
+  const from = locationState?.from || '/';
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
@@ -24,12 +32,11 @@ export const Register: FC = () => {
     dispatch(registerUser({ name: userName, email, password }))
       .unwrap()
       .then(() => {
-        // Сбрасываем состояние формы после успешной регистрации
         setUserName('');
         setEmail('');
         setPassword('');
         setErrorText('');
-        navigate('/profile'); // Успешная регистрация → профиль
+        navigate(from, { replace: true });
       })
       .catch((err) => {
         setErrorText(err.message || 'Ошибка регистрации');

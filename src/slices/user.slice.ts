@@ -103,7 +103,6 @@ const userSlice = createSlice({
       state.user = action.payload;
     },
     forceAuthCheck: (state) => {
-      state.isAuthChecked = false;
       state.isAuthChecked = true;
     },
   },
@@ -177,7 +176,7 @@ const userSlice = createSlice({
     });
     builder.addCase(logoutUser.fulfilled, (state) => {
       state.user = null;
-      state.isAuthChecked = false;
+      state.isAuthChecked = true;
       state.loading = false;
     });
     builder.addCase(logoutUser.rejected, (state) => {

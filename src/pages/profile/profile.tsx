@@ -54,6 +54,11 @@ export const Profile: FC = () => {
       userData.email = formValue.email;
     }
 
+    // Добавляем пароль, если он введён
+    if (formValue.password) {
+      userData.password = formValue.password;
+    }
+
     dispatch(updateUser(userData))
       .unwrap()
       .then(() => {
@@ -82,9 +87,14 @@ export const Profile: FC = () => {
   };
 
   const handleLogout = () => {
-    dispatch(logoutUser());
-    dispatch(forceAuthCheck());
-    navigate('/login');
+    dispatch(logoutUser())
+      .unwrap()
+      .then(() => {
+        navigate('/login');
+      })
+      .catch(() => {
+        navigate('/login');
+      });
   };
 
   useEffect(

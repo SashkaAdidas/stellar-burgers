@@ -18,20 +18,12 @@ export const Feed: FC = () => {
   const rawToken = accessTokenFromCookie || accessTokenFromStorage || '';
 
   useEffect(() => {
-    console.log('Feed component mounted, starting WebSocket connection');
     dispatch(startFeedConnection(''));
 
     return () => {
-      console.log('Feed component unmounted, closing WebSocket connection');
       dispatch(wsClose());
     };
   }, [dispatch]);
-
-  console.log('Feed component render:', {
-    orders: orders.length,
-    total,
-    totalToday,
-  });
 
   // Пока нет данных — прелоадер
   if (!orders.length && total === 0 && totalToday === 0) {

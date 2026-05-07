@@ -1,29 +1,15 @@
 import { ProfileOrdersUI } from '@ui-pages';
 import { FC, useEffect } from 'react';
 import { useDispatch, useSelector } from '../../services/store';
-import { getOrdersApi } from '../../utils/burger-api';
-import { setOrders } from '../../slices/feed.slice';
+import { fetchUserOrders } from '../../slices/user-orders.slice';
+import { selectUserOrders } from '../../slices/user-orders.slice';
 
 export const ProfileOrders: FC = () => {
-  /** TODO: взять переменную из стора */
   const dispatch = useDispatch();
-  const orders = useSelector((state) => state.feed.orders);
+  const orders = useSelector(selectUserOrders);
 
   useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        const data = await getOrdersApi();
-        dispatch(
-          setOrders({
-            orders: data,
-            total: 0,
-            totalToday: 0,
-          })
-        );
-      } catch (error) {}
-    };
-
-    fetchOrders();
+    dispatch(fetchUserOrders());
   }, [dispatch]);
 
   return <ProfileOrdersUI orders={orders} />;

@@ -8,7 +8,6 @@ import { groupOrdersByStatus } from '../../../../utils/feed-utils';
 export const FeedUI: FC<FeedUIProps> = memo(
   ({ orders, total, totalToday, handleGetFeeds }) => {
     // Группируем заказы по статусам с помощью утилиты
-    console.log('Все заказы из пропсов:', orders);
     const { readyOrders, pendingOrders } = groupOrdersByStatus(orders);
 
     // Объект feed для передачи в FeedInfoUI
