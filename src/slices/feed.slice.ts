@@ -39,8 +39,18 @@ export const feedSlice = createSlice({
     },
 
     wsMessage: (state, action: PayloadAction<TOrdersData>) => {
-      // Обработка полученных данных
-      state.orders = action.payload.orders.map((order) => ({ ...order }));
+      const mockOrders = action.payload.orders.map((order) => ({
+        ...order,
+        status: order.number % 2 === 0 ? 'done' : 'pending',
+      }));
+
+      // Сортируем по дате: новые — сверху
+      const sortedOrders = [...mockOrders].sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
+
+      state.orders = sortedOrders;
       state.total = action.payload.total;
       state.totalToday = action.payload.totalToday;
     },

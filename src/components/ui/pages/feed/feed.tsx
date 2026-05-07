@@ -3,33 +3,13 @@ import styles from './feed.module.css';
 import { FeedUIProps } from './type';
 import { OrdersList, FeedInfoUI } from '@components';
 import { RefreshButton } from '@zlden/react-developer-burger-ui-components';
-
-const getOrdersByStatus = (
-  orders: any[],
-  targetStatus: 'done' | 'pending'
-): number[] =>
-  orders
-    .filter((order) => {
-      const status = order.status?.toLowerCase();
-
-      if (targetStatus === 'done') {
-        return status === 'done' && order.number % 2 === 0;
-      } else {
-        return status === 'done' && order.number % 2 === 1;
-      }
-    })
-    .sort(
-      (a, b) =>
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-    )
-    .map((order) => order.number)
-    .slice(0, 10);
+import { groupOrdersByStatus } from '../../../../utils/feed-utils';
 
 export const FeedUI: FC<FeedUIProps> = memo(
   ({ orders, total, totalToday, handleGetFeeds }) => {
-    // Формируем списки номеров заказов
-    const readyOrders = getOrdersByStatus(orders, 'done');
-    const pendingOrders = getOrdersByStatus(orders, 'pending');
+    // Группируем заказы по статусам с помощью утилиты
+    console.log('Все заказы из пропсов:', orders);
+    const { readyOrders, pendingOrders } = groupOrdersByStatus(orders);
 
     // Объект feed для передачи в FeedInfoUI
     const feed = { orders, total, totalToday };
