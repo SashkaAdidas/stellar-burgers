@@ -1,4 +1,13 @@
-import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  useNavigate,
+  useLocation,
+  Location,
+  Navigate,
+  Outlet,
+} from 'react-router-dom';
 import {
   ConstructorPage,
   Feed,
@@ -12,6 +21,7 @@ import {
 } from '@pages';
 import { Preloader } from '@ui';
 import { AppHeader, Modal, IngredientDetails, OrderInfo } from '@components';
+import { OnlyUnAuth } from '../../components/protected-route';
 
 // Стор
 import { useSelector, useDispatch } from '../../services/store';
@@ -23,93 +33,181 @@ import { useEffect } from 'react';
 import '../../index.css';
 import styles from './app.module.css';
 
-const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
+// Тип для location state
+type LocationState = {
+  background?: Location;
+  from?: string;
+};
+
+const ProtectedRoute = () => {
   const { isAuthChecked, user } = useSelector((state: RootState) => state.user);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     if (isAuthChecked && !user) {
-      navigate('/login');
+      // Сохраняем текущий маршрут для последующего редиректа после авторизации
+      navigate('/login', { state: { from: location.pathname } });
     }
-  }, [isAuthChecked, user, navigate]);
+  }, [isAuthChecked, user, navigate, location.pathname]);
 
   if (!isAuthChecked) {
     return <Preloader />;
   }
 
-  return user ? children : null;
+  return user ? <Outlet /> : null;
 };
 
-const ModalRoute = ({
-  children,
-  title,
-}: {
-  children: JSX.Element;
-  title: string;
-}) => {
+const ModalRoute = ({ title }: { title: string }) => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const locationState = location.state as LocationState;
+  const background = locationState?.background;
+
+  // Извлекаем номер заказа или идентификатор ингредиента из пути
+  const orderNumber = location.pathname.split('/').pop();
 
   return (
-    <Modal title={title} onClose={() => navigate(-1)}>
-      {children}
+    <Modal
+      title={title}
+      onClose={() => {
+        // Если есть background, возвращаемся к нему, иначе переходим на главную
+        if (background) {
+          navigate(-1);
+        } else {
+          navigate('/');
+        }
+      }}
+    >
+      <div className={styles.detailPageWrap}>
+        <p className={`text text_type_digits-default ${styles.detailHeader}`}>
+          #{orderNumber}
+        </p>
+        <OrderInfo />
+      </div>
     </Modal>
   );
 };
 
-const AppRoutes = () => (
-  <Routes>
-    {/* Основные страницы */}
-    <Route path="/" element={<ConstructorPage />} />
-    <Route path="/feed" element={<Feed />} />
-    <Route path="/login" element={<Login />} />
-    <Route path="/register" element={<Register />} />
-    <Route path="/forgot-password" element={<ForgotPassword />} />
-    <Route path="/reset-password" element={<ResetPassword />} />
-    <Route
-      path="/profile"
-      element={
-        <ProtectedRoute>
-          <Profile />
-        </ProtectedRoute>
-      }
-    />
-    <Route
-      path="/profile/orders"
-      element={
-        <ProtectedRoute>
-          <ProfileOrders />
-        </ProtectedRoute>
-      }
-    />
-    <Route path="*" element={<NotFound404 />} />
+const AppRoutes = () => {
+  const location = useLocation();
+  const locationState = location.state as LocationState;
+  const background = locationState?.background;
 
-    {/* Модальные окна */}
-    <Route
-      path="/feed/:number"
-      element={
-        <ModalRoute title="Детали заказа">
-          <OrderInfo />
-        </ModalRoute>
-      }
-    />
-    <Route
-      path="/ingredients/:id"
-      element={
-        <ModalRoute title="Детали ингредиента">
-          <IngredientDetails />
-        </ModalRoute>
-      }
-    />
-    <Route
-      path="/profile/orders/:number"
-      element={
-        <ModalRoute title="Детали заказа">
-          <OrderInfo />
-        </ModalRoute>
-      }
-    />
-  </Routes>
-);
+  return (
+    <>
+      {/* Основные маршруты - отображаются когда нет background location */}
+      <Routes location={background || location}>
+        <Route path="/" element={<ConstructorPage />} />
+        <Route path="/feed" element={<Feed />} />
+
+        {/* Защищенные маршруты профиля */}
+        <Route path="/profile" element={<ProtectedRoute />}>
+          <Route index element={<Profile />} />
+          <Route path="orders" element={<ProfileOrders />} />
+          <Route path="orders/:number" element={<ProtectedRoute />}>
+            <Route
+              index
+              element={
+                <div className={styles.detailPageWrap}>
+                  <p
+                    className={`text text_type_digits-default ${styles.detailHeader}`}
+                  >
+                    #{location.pathname.split('/').pop()}
+                  </p>
+                  <OrderInfo />
+                </div>
+              }
+            />
+          </Route>
+        </Route>
+
+        {/* Публичные маршруты, доступные только неавторизованным пользователям */}
+        <Route
+          path="/login"
+          element={
+            <OnlyUnAuth>
+              <Login />
+            </OnlyUnAuth>
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <OnlyUnAuth>
+              <Register />
+            </OnlyUnAuth>
+          }
+        />
+        <Route
+          path="/forgot-password"
+          element={
+            <OnlyUnAuth>
+              <ForgotPassword />
+            </OnlyUnAuth>
+          }
+        />
+        <Route
+          path="/reset-password"
+          element={
+            <OnlyUnAuth>
+              <ResetPassword />
+            </OnlyUnAuth>
+          }
+        />
+
+        {/* Детальные страницы */}
+        <Route
+          path="/feed/:number"
+          element={
+            <div className={styles.detailPageWrap}>
+              <p
+                className={`text text_type_digits-default ${styles.detailHeader}`}
+              >
+                #{location.pathname.split('/').pop()}
+              </p>
+              <OrderInfo />
+            </div>
+          }
+        />
+
+        <Route
+          path="/ingredients/:id"
+          element={
+            <div className={styles.detailPageWrap}>
+              <p
+                className={`text text_type_digits-default ${styles.detailHeader}`}
+              >
+                Детали ингредиента
+              </p>
+              <IngredientDetails />
+            </div>
+          }
+        />
+
+        <Route path="*" element={<NotFound404 />} />
+      </Routes>
+
+      {/* Модальные окна - отображаются поверх основного контента при наличии background location */}
+      {background && (
+        <Routes>
+          <Route
+            path="/feed/:number"
+            element={<ModalRoute title="Детали заказа" />}
+          />
+          <Route
+            path="/ingredients/:id"
+            element={<ModalRoute title="Детали ингредиента" />}
+          />
+          <Route
+            path="/profile/orders/:number"
+            element={<ModalRoute title="Детали заказа" />}
+          />
+        </Routes>
+      )}
+    </>
+  );
+};
 
 /**
  * Основной компонент приложения
@@ -136,27 +234,42 @@ const App = () => {
     (state: RootState) => state.ingredients
   );
 
-  const userState = useSelector((state: RootState) => state.user);
-
   return (
     <BrowserRouter>
-      <div className={styles.app}>
-        <AppHeader />
-
-        {/* Показываем прелоадер только при первой загрузке ингредиентов */}
-        {isIngredientsLoading && <Preloader />}
-
-        {/* Ошибка, если есть */}
-        {error && (
-          <div className={`${styles.error} text text_type_main-medium pt-4`}>
-            {error}
-          </div>
-        )}
-
-        {/* Основной контент, когда данные загружены */}
-        {!isIngredientsLoading && !error && <AppRoutes />}
-      </div>
+      <AppContent isIngredientsLoading={isIngredientsLoading} error={error} />
     </BrowserRouter>
+  );
+};
+
+// Отдельный компонент для содержимого приложения, который находится внутри BrowserRouter
+const AppContent = ({
+  isIngredientsLoading,
+  error,
+}: {
+  isIngredientsLoading: boolean;
+  error: string | null;
+}) => {
+  const location = useLocation();
+  const locationState = location.state as LocationState;
+  const background = locationState?.background;
+
+  return (
+    <div className={styles.app}>
+      <AppHeader />
+
+      {/* Показываем прелоадер только при первой загрузке ингредиентов */}
+      {isIngredientsLoading && <Preloader />}
+
+      {/* Ошибка, если есть */}
+      {error && (
+        <div className={`${styles.error} text text_type_main-medium pt-4`}>
+          {error}
+        </div>
+      )}
+
+      {/* Основной контент, когда данные загружены */}
+      {!isIngredientsLoading && !error && <AppRoutes />}
+    </div>
   );
 };
 
