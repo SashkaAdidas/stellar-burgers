@@ -36,15 +36,20 @@ export const constructorSlice = createSlice({
   name: 'constructor',
   initialState,
   reducers: {
-    addIngredient: (state, action: { payload: TIngredient }) => {
-      if (action.payload.type === 'bun') {
-        state.constructorItems.bun = action.payload;
-      } else {
-        state.constructorItems.ingredients.push({
-          ...action.payload,
+    addIngredient: {
+      reducer: (state, action: { payload: TConstructorIngredient }) => {
+        if (action.payload.type === 'bun') {
+          state.constructorItems.bun = action.payload;
+        } else {
+          state.constructorItems.ingredients.push(action.payload);
+        }
+      },
+      prepare: (ingredient: TIngredient) => ({
+        payload: {
+          ...ingredient,
           id: Date.now().toString(),
-        });
-      }
+        },
+      }),
     },
     removeIngredient: (state, action: { payload: { id: string } }) => {
       state.constructorItems.ingredients =
@@ -83,12 +88,21 @@ export const constructorSlice = createSlice({
       .addCase(orderBurger.fulfilled, (state, action) => {
         const orderData = action.payload;
 
+        // Формируем массив идентификаторов ингредиентов
+        // Булка должна учитываться дважды - сверху и снизу
+        const ingredientsIds = [
+          ...state.constructorItems.ingredients.map((item) => item._id),
+        ].filter((id): id is string => Boolean(id));
+
+        // Если есть булка, добавляем ее ID дважды (сверху и снизу)
+        if (state.constructorItems.bun) {
+          ingredientsIds.unshift(state.constructorItems.bun._id);
+          ingredientsIds.push(state.constructorItems.bun._id);
+        }
+
         const fullOrder: TOrder = {
           ...orderData,
-          ingredients: [
-            state.constructorItems.bun?._id,
-            ...state.constructorItems.ingredients.map((item) => item._id),
-          ].filter((id): id is string => Boolean(id)),
+          ingredients: ingredientsIds,
         };
 
         state.orderRequest = false;
