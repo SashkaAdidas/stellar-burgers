@@ -1,34 +1,47 @@
 import { FC, SyntheticEvent, useState } from 'react';
 import { LoginUI } from '@ui-pages';
-import { setCookie } from '../../utils/cookie';
-import { loginUserApi } from '../../utils/burger-api';
-import { useDispatch } from '../../services/store';
-import { setUser } from '../../slices/user.slice';
-import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from '../../services/store';
+import { loginUser } from '../../slices/user.slice';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { RootState } from '../../services/store';
+
+// Тип для location state
+type LocationState = {
+  from?: string;
+};
 
 export const Login: FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const [errorText, setErrorText] = useState('');
-  const handleSubmit = (e: SyntheticEvent) => {
-    e.preventDefault();
-    loginUserApi({ email, password })
-      .then((data) => {
-        // Сохраняем токены
-        setCookie('accessToken', data.accessToken);
-        localStorage.setItem('refreshToken', data.refreshToken);
-        dispatch(setUser(data.user));
-        // Перенаправляем на главную
-        navigate('/');
-      })
-      .catch((err) => {
-        setErrorText(err.message || 'Ошибка входа');
-      });
-  };
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+  const locationState = location.state as LocationState;
+
+  // Получаем состояние загрузки и ошибки из Redux
+  const { loading } = useSelector((state: RootState) => state.user);
+
+  const handleSubmit = (e: SyntheticEvent) => {
+    e.preventDefault();
+
+    // Сбрасываем предыдущую ошибку
+    setErrorText('');
+
+    // Dispatch-им thunk для входа пользователя
+    dispatch(loginUser({ email, password }))
+      .unwrap()
+      .then(() => {
+        // После успешного входа переходим на сохраненный маршрут или на главную
+        const from = locationState?.from || '/';
+        navigate(from, { replace: true });
+      })
+      .catch((error: string) => {
+        setErrorText(error || 'Ошибка входа');
+      });
+  };
 
   return (
     <LoginUI
@@ -38,6 +51,7 @@ export const Login: FC = () => {
       password={password}
       setPassword={setPassword}
       handleSubmit={handleSubmit}
+      isLoading={loading}
     />
   );
 };

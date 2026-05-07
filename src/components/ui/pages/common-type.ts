@@ -5,4 +5,5 @@ export type PageUIProps = {
   email: string;
   setEmail: Dispatch<SetStateAction<string>>;
   handleSubmit: (e: SyntheticEvent) => void;
+  isLoading?: boolean;
 };

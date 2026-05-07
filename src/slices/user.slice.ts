@@ -5,6 +5,7 @@ import {
   updateUserApi,
   registerUserApi,
   logoutApi,
+  loginUserApi,
 } from '../utils/burger-api';
 import { setCookie } from '../utils/cookie'; // Для сохранения токена
 
@@ -15,7 +16,28 @@ type TRegisterData = {
   password: string;
 };
 
+type TLoginData = {
+  email: string;
+  password: string;
+};
+
 // Асинхронные экшены
+
+// Вход пользователя
+export const loginUser = createAsyncThunk(
+  'user/login',
+  async (userData: TLoginData, { rejectWithValue }) => {
+    try {
+      const response = await loginUserApi(userData);
+      // Сохраняем токены в куки и хранилище
+      setCookie('accessToken', response.accessToken);
+      localStorage.setItem('refreshToken', response.refreshToken);
+      return response.user;
+    } catch (error: any) {
+      return rejectWithValue(error.message || 'Ошибка входа');
+    }
+  }
+);
 
 // Получение пользователя
 export const fetchUser = createAsyncThunk('user/fetch', async () => {
@@ -86,6 +108,21 @@ const userSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    // --- loginUser ---
+    builder.addCase(loginUser.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(loginUser.fulfilled, (state, action) => {
+      state.loading = false;
+      state.user = action.payload;
+      state.isAuthChecked = true;
+    });
+    builder.addCase(loginUser.rejected, (state, action) => {
+      state.loading = false;
+      state.error = (action.payload as string) || 'Ошибка входа';
+    });
+
     // --- fetchUser ---
     builder.addCase(fetchUser.pending, (state) => {
       state.loading = true;
