@@ -60,6 +60,7 @@ export const BurgerConstructor: FC = () => {
     // Формируем массив
     const ingredientIds = [
       constructorItems.bun._id,
+      constructorItems.bun._id,
       ...constructorItems.ingredients.map((ing) => ing._id),
     ];
 

@@ -19,7 +19,6 @@ export const OrderCard: FC<OrderCardProps> = memo(({ order }) => {
 
   const orderInfo = useMemo(() => {
     if (!order.ingredients || !ingredients.length) return null;
-
     //  Собираем ингредиенты по ID
     const ingredientsInfo = order.ingredients
       .map((id) => ingredients.find((ing) => ing._id === id))

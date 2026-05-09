@@ -57,20 +57,19 @@ const ProtectedRoute = () => {
   return user ? <Outlet /> : null;
 };
 
-const ModalRoute = ({ title }: { title: string }) => {
+const ModalRoute = ({ type }: { type: 'order' | 'ingredient' }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const locationState = location.state as LocationState;
   const background = locationState?.background;
 
   // Извлекаем номер заказа или идентификатор ингредиента из пути
-  const orderNumber = location.pathname.split('/').pop();
+  const id = location.pathname.split('/').pop();
 
   return (
     <Modal
-      title={title}
+      title={type === 'order' ? 'Детали заказа' : 'Детали ингредиента'}
       onClose={() => {
-        // Если есть background, возвращаемся к нему, иначе переходим на главную
         if (background) {
           navigate(-1);
         } else {
@@ -80,9 +79,9 @@ const ModalRoute = ({ title }: { title: string }) => {
     >
       <div className={styles.detailPageWrap}>
         <p className={`text text_type_digits-default ${styles.detailHeader}`}>
-          #{orderNumber}
+          {type === 'order' ? `#${id}` : 'Детали ингредиента'}
         </p>
-        <OrderInfo />
+        {type === 'order' ? <OrderInfo /> : <IngredientDetails />}
       </div>
     </Modal>
   );
@@ -190,17 +189,14 @@ const AppRoutes = () => {
       {/* Модальные окна - отображаются поверх основного контента при наличии background location */}
       {background && (
         <Routes>
-          <Route
-            path="/feed/:number"
-            element={<ModalRoute title="Детали заказа" />}
-          />
+          <Route path="/feed/:number" element={<ModalRoute type="order" />} />
           <Route
             path="/ingredients/:id"
-            element={<ModalRoute title="Детали ингредиента" />}
+            element={<ModalRoute type="ingredient" />}
           />
           <Route
             path="/profile/orders/:number"
-            element={<ModalRoute title="Детали заказа" />}
+            element={<ModalRoute type="order" />}
           />
         </Routes>
       )}

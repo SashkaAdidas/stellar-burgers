@@ -39,13 +39,7 @@ export const feedSlice = createSlice({
     },
 
     wsMessage: (state, action: PayloadAction<TOrdersData>) => {
-      const mockOrders = action.payload.orders.map((order) => ({
-        ...order,
-        status: order.number % 2 === 0 ? 'done' : 'pending',
-      }));
-
-      // Сортируем по дате
-      const sortedOrders = [...mockOrders].sort(
+      const sortedOrders = [...action.payload.orders].sort(
         (a, b) =>
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       );
