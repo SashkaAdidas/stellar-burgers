@@ -1,4 +1,16 @@
-node_modules
-.env
-.idea
-dist
+# Playwright
+playwright-report/
+test-results/
+
+# Jest
+coverage/
+*.lcov
+
+# Node
+node_modules/
+npm-debug.log
+
+# IDE
+.idea/
+.vscode/
+*.swp

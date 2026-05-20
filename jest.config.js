@@ -1,0 +1,31 @@
+module.exports = {
+  testEnvironment: 'jsdom',
+  testMatch: [
+    '**/__tests__/**/*.test.ts',
+    '**/__tests__/**/*.test.tsx',
+    '**/*.test.ts',
+    '**/*.test.tsx',
+  ],
+  testPathIgnorePatterns: ['/node_modules/', '/tests/'],
+  moduleNameMapper: {
+    '^@components/(.*)$': '<rootDir>/src/components/$1',
+    '^@ui/(.*)$': '<rootDir>/src/components/ui/$1',
+    '^@pages/(.*)$': '<rootDir>/src/pages/$1',
+    '^@services/(.*)$': '<rootDir>/src/services/$1',
+    '^@slices/(.*)$': '<rootDir>/src/slices/$1',
+    '^@utils-types$': '<rootDir>/src/utils/types.ts',
+    '^@utils$': '<rootDir>/src/utils/index.ts',
+    '\\.module\\.css$': 'identity-obj-proxy',
+    '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
+  },
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
+  collectCoverageFrom: [
+    'src/**/*.{js,jsx,ts,tsx}',
+    '!src/**/*.d.ts',
+    '!src/**/index.ts',
+    '!src/**/*.stories.{js,jsx,ts,tsx}',
+  ],
+  coverageDirectory: 'coverage',
+  coverageReporters: ['text', 'lcov', 'html'],
+  verbose: true,
+};
