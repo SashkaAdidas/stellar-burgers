@@ -5,5 +5,5 @@ module.exports = {
     config.entry.push(require.resolve('../.storybook/preview.tsx'));
 
     return config;
-  }
+  },
 };

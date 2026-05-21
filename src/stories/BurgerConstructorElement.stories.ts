@@ -9,8 +9,8 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     // More on how to position stories at: https://storybook.js.org/docs/configure/story-layout
-    layout: 'fullscreen'
-  }
+    layout: 'fullscreen',
+  },
 } satisfies Meta<typeof BurgerConstructorElementUI>;
 
 export default meta;
@@ -30,12 +30,12 @@ export const DefaultElement: Story = {
       price: 123,
       image: '',
       image_large: '',
-      image_mobile: ''
+      image_mobile: '',
     },
     index: 0,
     totalItems: 1,
     handleMoveUp: () => {},
     handleMoveDown: () => {},
-    handleClose: () => {}
-  }
+    handleClose: () => {},
+  },
 };

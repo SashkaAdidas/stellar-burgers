@@ -9,30 +9,30 @@ export const ForgotPasswordUI: FC<PageUIProps> = ({
   errorText,
   email,
   setEmail,
-  handleSubmit
+  handleSubmit,
 }) => (
   <main className={styles.container}>
     <div className={`pt-6 ${styles.wrapCenter}`}>
-      <h3 className='pb-6 text text_type_main-medium'>Восстановление пароля</h3>
+      <h3 className="pb-6 text text_type_main-medium">Восстановление пароля</h3>
       <form
         className={`pb-15 ${styles.form}`}
-        name='login'
+        name="login"
         onSubmit={handleSubmit}
       >
-        <div className='pb-6'>
+        <div className="pb-6">
           <Input
-            type='email'
-            placeholder='Укажите e-mail'
+            type="email"
+            placeholder="Укажите e-mail"
             onChange={(e) => setEmail(e.target.value)}
             value={email}
-            name='email'
+            name="email"
             error={false}
-            errorText=''
-            size='default'
+            errorText=""
+            size="default"
           />
         </div>
         <div className={`pb-6 ${styles.button}`}>
-          <Button type='primary' size='medium' htmlType='submit'>
+          <Button type="primary" size="medium" htmlType="submit">
             Восстановить
           </Button>
         </div>

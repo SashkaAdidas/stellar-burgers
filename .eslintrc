@@ -34,7 +34,7 @@
     "react/jsx-max-depth": ["warn", { "max": 8 }],
     "arrow-body-style": ["warn", "as-needed"],
     "dot-notation": "warn",
-    "jsx-quotes": ["warn", "prefer-single"],
+    "jsx-quotes": ["error", "prefer-double"],
     "valid-typeof": "warn",
     "@typescript-eslint/member-ordering": [
       "warn",

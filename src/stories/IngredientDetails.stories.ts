@@ -8,8 +8,8 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     // More on how to position stories at: https://storybook.js.org/docs/configure/story-layout
-    layout: 'fullscreen'
-  }
+    layout: 'fullscreen',
+  },
 } satisfies Meta<typeof IngredientDetailsUI>;
 
 export default meta;
@@ -28,7 +28,7 @@ export const DefaultIngredientDetails: Story = {
       price: 67,
       image: '',
       image_large: '',
-      image_mobile: ''
-    }
-  }
+      image_mobile: '',
+    },
+  },
 };
