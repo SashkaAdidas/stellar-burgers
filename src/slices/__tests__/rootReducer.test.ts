@@ -16,4 +16,10 @@ describe('Root Reducer', () => {
     expect(initialState).toHaveProperty('orderDetails');
     expect(initialState).toHaveProperty('userOrders');
   });
+
+  test('должен возвращать тот же стейт при неизвестном экшене', () => {
+    const sameState = rootReducer(undefined, { type: 'UNKNOWN_ACTION' });
+    const state = rootReducer(sameState, { type: 'UNKNOWN_ACTION' });
+    expect(state).toBe(sameState);
+  });
 });
